@@ -1,0 +1,11 @@
+{
+  "name": "i-want-an-iphone-right-now",
+  "owner": { "name": "marklovestech" },
+  "plugins": [
+    {
+      "name": "i-want-an-iphone-right-now",
+      "source": "./",
+      "description": "Checks Apple Store in-store pickup availability for the iPhone Duo near you."
+    }
+  ]
+}
