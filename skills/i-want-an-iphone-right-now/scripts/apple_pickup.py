@@ -11,6 +11,7 @@ import json
 import os
 import sys
 import urllib.request
+from urllib.parse import urlparse
 
 PRODUCT_URL = "https://www.apple.com/shop/buy-iphone/iphone-duo"
 CONFIGS = {
@@ -57,6 +58,8 @@ def parse_args(argv=None):
     bad = [c for c in args.configs.split(",") if c.strip() not in CONFIGS]
     if bad:
         ap.error(f"unknown config(s) {bad}; choose from {list(CONFIGS)}")
+    if args.zip is not None and not [z for z in args.zip.split(",") if z.strip()]:
+        ap.error("--zip needs at least one zip code")
     if args.email and not args.list_stores and not os.environ.get("RESEND_API_KEY"):
         ap.error("--email needs the RESEND_API_KEY environment variable")
     return args
@@ -146,7 +149,7 @@ def send_email(to, subj, text):
 async def apple_page(browser):
     for ctx in browser.contexts:
         for pg in ctx.pages:
-            if "apple.com" in pg.url:
+            if urlparse(pg.url).hostname == "www.apple.com":
                 return pg
     ctx = browser.contexts[0] if browser.contexts else await browser.new_context()
     pg = await ctx.new_page()

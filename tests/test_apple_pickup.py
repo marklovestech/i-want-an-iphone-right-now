@@ -21,6 +21,11 @@ class ParseArgsTest(unittest.TestCase):
         with self.assertRaises(SystemExit):
             ap.parse_args(["--zip", "94108", "--region", "bay-area"])
 
+    def test_rejects_empty_zip(self):
+        for z in ["", " , "]:
+            with self.assertRaises(SystemExit):
+                ap.parse_args(["--zip", z])
+
     def test_rejects_unknown_config(self):
         with self.assertRaises(SystemExit):
             ap.parse_args(["--zip", "94108", "--configs", "3tb-gold"])
