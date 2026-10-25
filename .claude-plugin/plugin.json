@@ -1,0 +1,7 @@
+{
+  "name": "i-want-an-iphone-right-now",
+  "description": "Checks Apple Store in-store pickup availability for the iPhone Duo near you, on demand or as a scheduled automation that emails a report.",
+  "version": "1.0.0",
+  "author": { "name": "marklovestech" },
+  "repository": "https://github.com/marklovestech/i-want-an-iphone-right-now"
+}
