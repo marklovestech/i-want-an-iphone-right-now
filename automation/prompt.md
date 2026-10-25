@@ -1,4 +1,4 @@
-Use the @skills:i-want-an-iphone-right-now skill in unattended mode. Nobody is watching this session: don't ask questions or wait for confirmation; run once and stop.
+Use the i-want-an-iphone-right-now skill (from the org plugin of the same name; if it is not loaded, follow https://github.com/marklovestech/i-want-an-iphone-right-now/blob/main/skills/i-want-an-iphone-right-now/SKILL.md) in unattended mode. Nobody is watching this session: don't ask questions or wait for confirmation; run once and stop.
 
 Check iPhone Duo in-store pickup with these settings:
 - Region: bay-area (all 17 Bay Area Apple Stores)

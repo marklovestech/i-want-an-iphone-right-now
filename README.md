@@ -90,7 +90,7 @@ Devin replies with the stores and configs it's about to check. Say OK, and it se
    ```
 4. Click **Create automation**.
 
-The maintainer's own live automation is mirrored in [`automation/`](automation/): [`prompt.md`](automation/prompt.md) is the session prompt and [`automation.json`](automation/automation.json) the rest of its settings (schedule, network allowlist, limits). Copy them and change the region, carrier, configs and email to yours.
+The maintainer's own live automation is mirrored in [`automation/`](automation/): [`automation.json`](automation/automation.json) holds its full settings (schedule, prompt, network allowlist, limits) and [`prompt.md`](automation/prompt.md) the same prompt as plain text. Copy them and change the region, carrier, configs and email to yours.
 
 You get an email after every run: `IN STOCK: ...` when something is available, `No stock: ...` when not, and `Check FAILED` if Apple's site couldn't be read. To change the address, area or configs later, edit the automation's prompt.
 

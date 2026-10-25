@@ -1,27 +1,81 @@
 {
   "name": "i-want-an-iphone-right-now: Bay Area iPhone Duo pickup check",
-  "run_as": {"type": "creator"},
+  "run_as": {
+    "type": "creator"
+  },
   "triggers": [
     {
       "event_type": "schedule:recurring",
-      "conditions": {"any": [{"all": [{"field": "rrule", "operator": "recurrence",
-        "value": "DTSTART;TZID=America/Los_Angeles:19700101T000000\nRRULE:FREQ=DAILY;BYHOUR=0,4,8,10,11,12,13,14,15,16,17,18,19,20,21;BYMINUTE=7"}]}]}
+      "conditions": {
+        "any": [
+          {
+            "all": [
+              {
+                "field": "rrule",
+                "operator": "recurrence",
+                "value": "DTSTART;TZID=America/Los_Angeles:19700101T000000\nRRULE:FREQ=DAILY;BYHOUR=0,4,8,10,11,12,13,14,15,16,17,18,19,20,21;BYMINUTE=7"
+              }
+            ]
+          }
+        ]
+      }
     }
   ],
   "actions": [
-    {"type": "start_session", "prompt": "<contents of automation/prompt.md>",
-     "session": {"tags": [], "bypass_approval": false}}
+    {
+      "type": "start_session",
+      "prompt": "Use the i-want-an-iphone-right-now skill (from the org plugin of the same name; if it is not loaded, follow https://github.com/marklovestech/i-want-an-iphone-right-now/blob/main/skills/i-want-an-iphone-right-now/SKILL.md) in unattended mode. Nobody is watching this session: don't ask questions or wait for confirmation; run once and stop.\n\nCheck iPhone Duo in-store pickup with these settings:\n- Region: bay-area (all 17 Bay Area Apple Stores)\n- Carrier: att\n- Configs: 1tb-white,1tb-night,2tb-white,2tb-night\n- Email the report to: mark@marklovestech.com\n\nThat is:\npython3 apple_pickup.py --region bay-area --carrier att --configs 1tb-white,1tb-night,2tb-white,2tb-night --email mark@marklovestech.com\n\nThe script emails the report itself (subject \"IN STOCK: ...\", \"No stock: ...\" or \"Check FAILED\"), using the RESEND_API_KEY secret. If the run fails before the script could email (for example, playwright won't install or Chrome isn't reachable), send a \"Check FAILED: iPhone Duo pickup\" email to the same address yourself via the Resend API with RESEND_API_KEY, including the error. Never add anything to an Apple bag, sign in, or check out.\n",
+      "session": {
+        "tags": [],
+        "bypass_approval": false
+      }
+    }
   ],
   "session_settings": {
-    "net_policy": {"allow": [
-      {"hostname": "git-manager.devin.ai"},
-      {"hostname": "*.apple.com"}, {"hostname": "*.cdn-apple.com"},
-      {"hostname": "pypi.org"}, {"hostname": "files.pythonhosted.org"},
-      {"hostname": "api.resend.com"},
-      {"hostname": "github.com"}, {"hostname": "raw.githubusercontent.com"}
-    ]}
+    "net_policy": {
+      "allow": [
+        {
+          "hostname": "git-manager.devin.ai"
+        },
+        {
+          "hostname": "*.apple.com"
+        },
+        {
+          "hostname": "*.cdn-apple.com"
+        },
+        {
+          "hostname": "pypi.org"
+        },
+        {
+          "hostname": "files.pythonhosted.org"
+        },
+        {
+          "hostname": "api.resend.com"
+        },
+        {
+          "hostname": "github.com"
+        },
+        {
+          "hostname": "raw.githubusercontent.com"
+        }
+      ]
+    }
   },
-  "limits": {"max_acu_limit": 3, "invocations": {"max_per_window": 20, "window_seconds": 86400}},
-  "concurrency": {"max_concurrent_runs": 1, "max_queue_depth": 0},
-  "notifications": {"email": {"when": "dispatch_failed", "recipients": null}}
+  "limits": {
+    "max_acu_limit": 3,
+    "invocations": {
+      "max_per_window": 20,
+      "window_seconds": 86400
+    }
+  },
+  "concurrency": {
+    "max_concurrent_runs": 1,
+    "max_queue_depth": 0
+  },
+  "notifications": {
+    "email": {
+      "when": "dispatch_failed",
+      "recipients": null
+    }
+  }
 }
