@@ -89,3 +89,31 @@ class ReportTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FakePage:
+    def __init__(self, replies):
+        self.replies, self.calls, self.reloads = list(replies), 0, 0
+
+    async def evaluate(self, js, url):
+        self.calls += 1
+        return self.replies.pop(0) if self.replies else [541, "<html>Page Not Found</html>"]
+
+    async def reload(self, **kw):
+        self.reloads += 1
+
+    async def wait_for_timeout(self, ms):
+        pass
+
+
+class FetchJsonTest(unittest.TestCase):
+    def test_retries_past_bot_shield(self):
+        page = FakePage([[541, "<html>"], [541, "<html>"], [200, '{"ok": 1}']])
+        self.assertEqual(ap.asyncio.run(ap.fetch_json(page, "/u", "x")), {"ok": 1})
+        self.assertEqual(page.calls, 3)
+
+    def test_gives_up_after_attempts_with_one_reload(self):
+        page = FakePage([])
+        with self.assertRaisesRegex(RuntimeError, "HTTP 541"):
+            ap.asyncio.run(ap.fetch_json(page, "/u", "x", attempts=4))
+        self.assertEqual((page.calls, page.reloads), (4, 1))
