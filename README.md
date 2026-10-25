@@ -90,6 +90,8 @@ Devin replies with the stores and configs it's about to check. Say OK, and it se
    ```
 4. Click **Create automation**.
 
+The maintainer's own live automation is mirrored in [`automation/`](automation/): [`prompt.md`](automation/prompt.md) is the session prompt and [`automation.json`](automation/automation.json) the rest of its settings (schedule, network allowlist, limits). Copy them and change the region, carrier, configs and email to yours.
+
 You get an email after every run: `IN STOCK: ...` when something is available, `No stock: ...` when not, and `Check FAILED` if Apple's site couldn't be read. To change the address, area or configs later, edit the automation's prompt.
 
 **Cost:** each run is a separate Devin session, so the schedule above is about 15 sessions a day. Check your plan's usage, and pause or delete the automation once you have your iPhone.
