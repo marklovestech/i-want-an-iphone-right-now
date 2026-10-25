@@ -102,7 +102,7 @@ Devin replies with the stores and configs it's about to check. Say OK, and it se
 5. **Network (optional):** if you turn on the automation's network policy, allow at least these hosts: `*.apple.com`, `*.cdn-apple.com` (Apple's site), `pypi.org`, `files.pythonhosted.org` (to install playwright), `api.resend.com` (email), and `github.com`, `raw.githubusercontent.com`, `git-manager.devin.ai` (to fetch the skill from GitHub).
 6. Click **Create automation**. To try it right away, use **Run now** on the automation's page.
 
-The maintainer's own live automation is mirrored in [`automation/`](automation/): [`automation.json`](automation/automation.json) holds its full settings (schedule, prompt, network allowlist, limits) and [`prompt.md`](automation/prompt.md) the same prompt as plain text. Copy them and change the region, carrier, configs and email to yours.
+The maintainer's own live automation is mirrored in [`automation/`](automation/): [`automation.json`](automation/automation.json) holds its full settings (schedule, prompt, network policy, limits; it currently runs with no network allowlist) and [`prompt.md`](automation/prompt.md) the same prompt as plain text. Copy them and change the region, carrier, configs and email to yours.
 
 You get an email after every run: `IN STOCK: ...` when something is available, `No stock: ...` when not, and `Check FAILED` if Apple's site couldn't be read. To change the address, area or configs later, edit the automation's prompt.
 

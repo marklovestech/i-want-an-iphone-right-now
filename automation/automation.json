@@ -32,34 +32,7 @@
     }
   ],
   "session_settings": {
-    "net_policy": {
-      "allow": [
-        {
-          "hostname": "git-manager.devin.ai"
-        },
-        {
-          "hostname": "*.apple.com"
-        },
-        {
-          "hostname": "*.cdn-apple.com"
-        },
-        {
-          "hostname": "pypi.org"
-        },
-        {
-          "hostname": "files.pythonhosted.org"
-        },
-        {
-          "hostname": "api.resend.com"
-        },
-        {
-          "hostname": "github.com"
-        },
-        {
-          "hostname": "raw.githubusercontent.com"
-        }
-      ]
-    }
+    "net_policy": null
   },
   "limits": {
     "max_acu_limit": 3,
