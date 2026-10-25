@@ -53,7 +53,7 @@ Email uses Resend: `RESEND_API_KEY` is required and `RESEND_FROM` is optional (i
 
 ## Gotchas
 
-- Apple's API (`/shop/fulfillment-messages`) returns a 404 HTML page to curl or plain HTTP clients, which is why the script drives a real browser. If the script reports non-JSON, reload the apple.com tab and retry once.
+- Apple's API (`/shop/fulfillment-messages`) returns a 404 HTML page to curl or plain HTTP clients, which is why the script drives a real browser. Even in the browser, Apple's bot shield answers HTTP 541 (HTML "Page Not Found") for the first few seconds after the page loads, until its JS sets the `shld_bt_ck` cookie. The script retries for ~30s (reloading the tab once), so a non-JSON failure means something else is wrong; don't just rerun.
 - A store counts as available when the API's `pickupDisplay` is `"available"`. Unavailable stores show "Currently unavailable" on the site.
 - The product page's own store picker may default to a zip far from the user. Ignore it; the script passes its own zips.
 - `--region bay-area` checks 17 stores from San Francisco to San Jose and Santa Rosa. Sacramento (Arden Fair) is not included.

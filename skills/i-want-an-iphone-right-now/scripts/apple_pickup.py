@@ -157,6 +157,21 @@ async def apple_page(browser):
     return pg
 
 
+async def fetch_json(page, url, what, attempts=15, delay_ms=2000):
+    # Apple's bot shield answers HTTP 541 (an HTML "Page Not Found") until the page's
+    # JS has set its shld_bt_ck cookie, a few seconds after load; it also expires.
+    for i in range(attempts):
+        r = await page.evaluate("u => fetch(u).then(async r => [r.status, await r.text()])", url)
+        try:
+            return json.loads(r[1])
+        except json.JSONDecodeError:
+            pass
+        if i == attempts // 2:
+            await page.reload(wait_until="domcontentloaded")
+        await page.wait_for_timeout(delay_ms)
+    raise RuntimeError(f"Apple returned non-JSON (HTTP {r[0]}) for {what} after {attempts} tries")
+
+
 async def fetch_all(args, configs, zips):
     from playwright.async_api import async_playwright
     cp = CARRIERS[args.carrier]
@@ -166,12 +181,7 @@ async def fetch_all(args, configs, zips):
         responses = []
         for part, _ in (configs[:1] if args.list_stores else configs):
             for z in zips:
-                text = await page.evaluate("u => fetch(u).then(r => r.text())",
-                                           API.format(part=part, cp=cp, zip=z))
-                try:
-                    data = json.loads(text)
-                except json.JSONDecodeError:
-                    raise RuntimeError(f"Apple returned non-JSON for {part} near {z}; reload the apple.com tab and retry")
+                data = await fetch_json(page, API.format(part=part, cp=cp, zip=z), f"{part} near {z}")
                 responses.append((part, data["body"]["content"]["pickupMessage"]["stores"]))
         return responses
 
