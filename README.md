@@ -45,6 +45,8 @@ Installing the skill from this public repo doesn't need GitHub. Connect GitHub i
 
 See [GitHub integration](https://docs.devin.ai/integrations/gh). Creating the connection for a GitHub organization needs an admin of that organization; a personal account works too.
 
+If you use Devin through a company or enterprise account, each Devin organization also has its own repository list. Check that your fork appears under **Settings → (your organization) → Repositories**. If it doesn't, an admin adds it with **repositories permissions** on that page.
+
 ### 3. Set up email (for automations)
 
 The report is emailed through [Resend](https://resend.com), which has a free tier.
@@ -56,9 +58,11 @@ The report is emailed through [Resend](https://resend.com), which has a free tie
 ### 4. Install the skill
 
 1. In Devin, open **Customize → Plugins → Add plugin → From repository**.
-2. Enter `marklovestech/i-want-an-iphone-right-now` (or your fork) and install it.
+2. Enter `marklovestech/i-want-an-iphone-right-now` (or your fork) and install it. Install it for yourself, or for your whole Devin organization if others should get it too.
 
 New sessions now have the `i-want-an-iphone-right-now` skill. See [Installing plugins](https://docs.devin.ai/product-guides/plugins#from-a-repository-a-zip-or-the-editor).
+
+Automation sessions may not load a plugin installed from a repository, even when normal sessions do (see [Troubleshooting](#troubleshooting)). The automation prompt below links the skill's instructions on GitHub, so the run still works when that happens.
 
 ### 5. Run a check
 
@@ -83,18 +87,32 @@ Devin replies with the stores and configs it's about to check. Say OK, and it se
    Adjust the hours to your stores' hours; Apple lists them on each store's page.
 3. **Action:** start a Devin session with a prompt like this, using your own settings:
    ```
-   Use the i-want-an-iphone-right-now skill in unattended mode.
+   Use the i-want-an-iphone-right-now skill (if it is not loaded, follow
+   https://github.com/marklovestech/i-want-an-iphone-right-now/blob/main/skills/i-want-an-iphone-right-now/SKILL.md)
+   in unattended mode. Nobody is watching this session: don't ask questions or wait
+   for confirmation; run once and stop.
+
    Check iPhone Duo pickup: zip 94108 (or: the bay-area region), carrier att,
    configs 1tb-white,1tb-night,2tb-white,2tb-night.
-   Email the report to you@example.com. Don't ask me anything; just run once and stop.
+   Email the report to you@example.com.
+   Never add anything to an Apple bag, sign in, or check out.
    ```
-4. Click **Create automation**.
+   Name the skill in plain text as above. Devin rejects an `@skills:` reference to a plugin skill in an automation prompt.
+4. **Secrets:** the automation's sessions need `RESEND_API_KEY` (step 3). If the automation runs as you, your personal secrets are available to it.
+5. **Network (optional):** if you turn on the automation's network policy, allow at least these hosts: `*.apple.com`, `*.cdn-apple.com` (Apple's site), `pypi.org`, `files.pythonhosted.org` (to install playwright), `api.resend.com` (email), and `github.com`, `raw.githubusercontent.com`, `git-manager.devin.ai` (to fetch the skill from GitHub).
+6. Click **Create automation**. To try it right away, use **Run now** on the automation's page.
 
 The maintainer's own live automation is mirrored in [`automation/`](automation/): [`automation.json`](automation/automation.json) holds its full settings (schedule, prompt, network allowlist, limits) and [`prompt.md`](automation/prompt.md) the same prompt as plain text. Copy them and change the region, carrier, configs and email to yours.
 
 You get an email after every run: `IN STOCK: ...` when something is available, `No stock: ...` when not, and `Check FAILED` if Apple's site couldn't be read. To change the address, area or configs later, edit the automation's prompt.
 
 **Cost:** each run is a separate Devin session, so the schedule above is about 15 sessions a day. Check your plan's usage, and pause or delete the automation once you have your iPhone.
+
+## Troubleshooting
+
+- **The automation's session says the plugin couldn't be loaded** (for example, "repository doesn't exist or authentication failed"), while normal sessions have the skill. We've seen this on Devin automation runs even with the repo granted to the organization and no network policy. The prompt above makes the run fall back to the skill's instructions on GitHub, and the check still completes.
+- **A `Check FAILED` email followed by a normal report from the same run.** In a freshly started browser, Apple's first availability reply is often not the stock data. The script emails a failure, then the agent reloads the apple.com tab and retries once, and that retry sends the real report.
+- **`Check FAILED` with nothing after it.** Apple's site couldn't be read even after the retry. The next scheduled run tries again. If it keeps failing, Apple may have changed the site and the script needs updating.
 
 ## Use it with Claude Code
 
