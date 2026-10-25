@@ -111,8 +111,7 @@ You get an email after every run: `IN STOCK: ...` when something is available, `
 ## Troubleshooting
 
 - **The automation's session says the plugin couldn't be loaded** (for example, "repository doesn't exist or authentication failed"), while normal sessions have the skill. We've seen this on Devin automation runs even with the repo granted to the organization and no network policy. The prompt above makes the run fall back to the skill's instructions on GitHub, and the check still completes.
-- **A `Check FAILED` email followed by a normal report from the same run.** In a freshly started browser, Apple's first availability reply is often not the stock data. The script emails a failure, then the agent reloads the apple.com tab and retries once, and that retry sends the real report.
-- **`Check FAILED` with nothing after it.** Apple's site couldn't be read even after the retry. The next scheduled run tries again. If it keeps failing, Apple may have changed the site and the script needs updating.
+- **`Check FAILED` email.** Apple's site couldn't be read. For the first few seconds after an apple.com page loads, Apple's bot shield answers the availability API with an HTML "Page Not Found", so the script retries for about 30 seconds (reloading the tab once) before it emails a failure. A failure email therefore means a real problem, not a cold browser. The next scheduled run tries again. If it keeps failing, Apple may have changed the site and the script needs updating.
 
 ## Use it with Claude Code
 
