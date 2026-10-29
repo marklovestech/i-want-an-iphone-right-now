@@ -13,7 +13,23 @@
               {
                 "field": "rrule",
                 "operator": "recurrence",
-                "value": "DTSTART;TZID=America/Los_Angeles:19700101T000000\nRRULE:FREQ=DAILY;BYHOUR=0,4,8,10,11,12,13,14,15,16,17,18,19,20,21;BYMINUTE=7"
+                "value": "DTSTART;TZID=America/New_York:19700101T000000\nRRULE:FREQ=DAILY;BYHOUR=8,10,12,14,16,18,20,22;BYMINUTE=7;UNTIL=20261104T225959Z"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "event_type": "schedule:recurring",
+      "conditions": {
+        "any": [
+          {
+            "all": [
+              {
+                "field": "rrule",
+                "operator": "recurrence",
+                "value": "DTSTART;TZID=America/Los_Angeles:20261104T160700\nRRULE:FREQ=DAILY;BYHOUR=8,10,12,14,16,18,20,22;BYMINUTE=7"
               }
             ]
           }
@@ -24,7 +40,7 @@
   "actions": [
     {
       "type": "start_session",
-      "prompt": "Use the i-want-an-iphone-right-now skill (from the org plugin of the same name; if it is not loaded, follow https://github.com/marklovestech/i-want-an-iphone-right-now/blob/main/skills/i-want-an-iphone-right-now/SKILL.md) in unattended mode. Nobody is watching this session: don't ask questions or wait for confirmation; run once and stop.\n\nCheck iPhone Duo in-store pickup with these settings:\n- Region: bay-area (all 17 Bay Area Apple Stores)\n- Carrier: att\n- Configs: 1tb-white,1tb-night,2tb-white,2tb-night\n- Email the report to: mark@marklovestech.com\n\nThat is:\npython3 apple_pickup.py --region bay-area --carrier att --configs 1tb-white,1tb-night,2tb-white,2tb-night --email mark@marklovestech.com\n\nThe script emails the report itself (subject \"IN STOCK: ...\", \"No stock: ...\" or \"Check FAILED\"), using the RESEND_API_KEY secret. If the run fails before the script could email (for example, playwright won't install or Chrome isn't reachable), send a \"Check FAILED: iPhone Duo pickup\" email to the same address yourself via the Resend API with RESEND_API_KEY, including the error. Never add anything to an Apple bag, sign in, or check out.\n",
+      "prompt": "Use the i-want-an-iphone-right-now skill (from the org plugin of the same name; if it is not loaded, follow https://github.com/marklovestech/i-want-an-iphone-right-now/blob/main/skills/i-want-an-iphone-right-now/SKILL.md) in unattended mode. Nobody is watching this session: don't ask questions or wait for confirmation; run once and stop.\n\nPick the stores by the current time (run `TZ=America/New_York date` to check):\n- Before 2026-11-04 18:00 America/New_York: 9 New York stores (Manhattan and Brooklyn) near the Bowery: `--zip 10002 --stores R032,R594,R654,R250,R715,R415,R095,R582,R251`\n- From 2026-11-04 18:00 America/New_York on: `--region bay-area` (all 17 Bay Area Apple Stores)\n\nOther settings:\n- Carrier: att\n- Configs: 1tb-white,1tb-night,2tb-white,2tb-night\n- Email the report to: mark@marklovestech.com\n\nThat is, until Nov 4 at 6pm Eastern:\npython3 apple_pickup.py --zip 10002 --stores R032,R594,R654,R250,R715,R415,R095,R582,R251 --carrier att --configs 1tb-white,1tb-night,2tb-white,2tb-night --email mark@marklovestech.com\n\nand after that:\npython3 apple_pickup.py --region bay-area --carrier att --configs 1tb-white,1tb-night,2tb-white,2tb-night --email mark@marklovestech.com\n\nThe script emails the report itself (subject \"IN STOCK: ...\", \"No stock: ...\" or \"Check FAILED\"), using the RESEND_API_KEY secret. If the run fails before the script could email (for example, playwright won't install or Chrome isn't reachable), send a \"Check FAILED: iPhone Duo pickup\" email to the same address yourself via the Resend API with RESEND_API_KEY, including the error. Never add anything to an Apple bag, sign in, or check out.\n",
       "session": {
         "tags": [],
         "bypass_approval": false

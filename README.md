@@ -139,6 +139,7 @@ python3 skills/i-want-an-iphone-right-now/scripts/apple_pickup.py --zip 94108 --
 |---|---|
 | `--zip 94108,95014` | Check the ~12 stores nearest each zip (required unless `--region` is used) |
 | `--region bay-area` | Check every store in a predefined region |
+| `--stores R032,R654` | With `--zip`: check only these store numbers (get them from `--list-stores`) |
 | `--carrier` | `att`, `tmobile`, `verizon` or `unlocked` (default) |
 | `--configs` | Comma-separated: `256gb-white`, `256gb-night`, `512gb-white`, `512gb-night`, `1tb-white`, `1tb-night`, `2tb-white`, `2tb-night` (default: all) |
 | `--list-stores` | Only list the stores that would be checked |
