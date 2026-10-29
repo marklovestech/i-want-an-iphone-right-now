@@ -39,6 +39,18 @@ class ParseArgsTest(unittest.TestCase):
         self.assertIsNone(expected)
         self.assertEqual(area, "stores nearest 94108, 95014")
 
+    def test_stores_filter(self):
+        args = ap.parse_args(["--zip", "10002", "--stores", "r032, R654,"])
+        _, zips, expected, area = ap.plan(args)
+        self.assertEqual(zips, ["10002"])
+        self.assertEqual(list(expected), ["R032", "R654"])
+        self.assertEqual(area, "selected stores near 10002")
+
+    def test_stores_needs_zip_and_a_store(self):
+        for argv in (["--region", "bay-area", "--stores", "R075"], ["--zip", "10002", "--stores", " , "]):
+            with self.assertRaises(SystemExit):
+                ap.parse_args(argv)
+
     def test_email_needs_api_key(self):
         old = os.environ.pop("RESEND_API_KEY", None)
         try:
@@ -80,6 +92,16 @@ class ReportTest(unittest.TestCase):
         self.assertNotIn("Chestnut", text)
         self.assertIn("Available: none", text)
         self.assertEqual(ap.subject(hits, 2, 2), "No stock: iPhone Duo pickup (2 stores x 2 configs)")
+
+    def test_selected_stores_report_keeps_names_and_flags_missing(self):
+        stores, avail = ap.merge(self.responses(), self.configs)
+        expected = {"R217": "", "R032": ""}
+        hits, text = ap.availability_report(stores, avail, expected, self.configs, "att", "selected stores near 94108")
+        self.assertEqual(hits, ["1TB Night Sky at Chestnut Street, San Francisco"])
+        self.assertIn("R217 Chestnut Street, San Francisco", text)
+        self.assertIn("R032                ", text)
+        self.assertIn("MISSING", text)
+        self.assertNotIn("Union Square", text)
 
     def test_store_list(self):
         stores, _ = ap.merge(self.responses()[:1], self.configs)

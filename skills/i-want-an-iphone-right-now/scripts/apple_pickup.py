@@ -47,6 +47,8 @@ def parse_args(argv=None):
     where = ap.add_mutually_exclusive_group(required=True)
     where.add_argument("--zip", help="comma-separated zip codes; checks the ~12 stores nearest each")
     where.add_argument("--region", choices=REGIONS, help="check every store in a predefined region")
+    ap.add_argument("--stores", help="with --zip: comma-separated store numbers (e.g. R032,R654) to keep; "
+                                     "other stores Apple returns are ignored")
     ap.add_argument("--carrier", default="unlocked", choices=CARRIERS)
     ap.add_argument("--configs", default=",".join(CONFIGS),
                     help="comma-separated config keys (default: all): " + ", ".join(CONFIGS))
@@ -60,6 +62,11 @@ def parse_args(argv=None):
         ap.error(f"unknown config(s) {bad}; choose from {list(CONFIGS)}")
     if args.zip is not None and not [z for z in args.zip.split(",") if z.strip()]:
         ap.error("--zip needs at least one zip code")
+    if args.stores is not None:
+        if args.region:
+            ap.error("--stores only works with --zip")
+        if not [n for n in args.stores.split(",") if n.strip()]:
+            ap.error("--stores needs at least one store number")
     if args.email and not args.list_stores and not os.environ.get("RESEND_API_KEY"):
         ap.error("--email needs the RESEND_API_KEY environment variable")
     return args
@@ -72,6 +79,9 @@ def plan(args):
         r = REGIONS[args.region]
         return configs, r["zips"], r["stores"], f"{args.region} stores"
     zips = [z.strip() for z in args.zip.split(",") if z.strip()]
+    if args.stores:
+        expected = {n.strip().upper(): "" for n in args.stores.split(",") if n.strip()}
+        return configs, zips, expected, "selected stores near " + ", ".join(zips)
     return configs, zips, None, "stores nearest " + ", ".join(zips)
 
 
@@ -92,7 +102,7 @@ def store_order(stores, expected):
 
 def label(num, stores, expected):
     if num not in stores:
-        return f"{num} {expected[num]}"
+        return f"{num} {expected[num]}".rstrip()
     name, city, dist = stores[num]
     return f"{num} {name}, {city}" + (f" ({dist})" if not expected and dist else "")
 

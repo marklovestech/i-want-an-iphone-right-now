@@ -17,6 +17,7 @@ Take these from the user's request or the automation prompt:
 | Input | Flag | Default |
 |---|---|---|
 | Where | `--zip 94108` (comma-separated zips; ~12 nearest stores each) or `--region bay-area` | none: ask if not given |
+| Only these stores | `--stores R032,R654,...` (with `--zip`; store numbers from `--list-stores`) | every store returned |
 | Configs | `--configs 1tb-white,2tb-night,...` | all 8 |
 | Carrier | `--carrier att\|tmobile\|verizon\|unlocked` | `unlocked` |
 | Email | `--email you@example.com` | no email |
@@ -56,5 +57,6 @@ Email uses Resend: `RESEND_API_KEY` is required and `RESEND_FROM` is optional (i
 - Apple's API (`/shop/fulfillment-messages`) returns a 404 HTML page to curl or plain HTTP clients, which is why the script drives a real browser. Even in the browser, Apple's bot shield answers HTTP 541 (HTML "Page Not Found") for the first few seconds after the page loads, until its JS sets the `shld_bt_ck` cookie. The script retries for ~30s (reloading the tab once), so a non-JSON failure means something else is wrong; don't just rerun.
 - A store counts as available when the API's `pickupDisplay` is `"available"`. Unavailable stores show "Currently unavailable" on the site.
 - The product page's own store picker may default to a zip far from the user. Ignore it; the script passes its own zips.
+- To check only some of the stores near a zip (for example, those within a short trip), run `--zip ... --list-stores` first, then pass the store numbers you want with `--stores`. A listed store Apple doesn't return is reported as MISSING.
 - `--region bay-area` checks 17 stores from San Francisco to San Jose and Santa Rosa. Sacramento (Arden Fair) is not included.
 - Other iPhone models: open the product page, find the `"partNumber"` values near `dimensionCapacity` / `dimensionColor` / `carrierModel` in its HTML, and add them to `CONFIGS` / `CARRIERS` in the script.
